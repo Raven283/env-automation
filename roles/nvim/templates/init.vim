@@ -115,7 +115,7 @@ lua << END
   )
 
   function on_attach(client, bufnr)
-    require'completion'.on_attach()
+    require'completion'.on_attach(client, bufnr)
     api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
   end
 
@@ -136,11 +136,6 @@ inoremap <silent><expr> <C-space> completion#trigger_completion()
 autocmd CompleteDone * pclose
 
 " diagnostics
-let g:diagnostic_enable_virtual_text = 1
-let g:diagnostic_trimmed_virtual_text = '40'
-let g:diagnostic_enable_underline = 1
-let g:diagnostic_insert_delay = 1
-
 call sign_define("LspDiagnosticsErrorSign", {"text" : "•", "texthl" : "LspDiagnosticsError"})
 call sign_define("LspDiagnosticsWarningSign", {"text" : "•", "texthl" : "LspDiagnosticsWarning"})
 call sign_define("LspDiagnosticsInformationSign", {"text" : "•", "texthl" : "LspDiagnosticsInformation"})
