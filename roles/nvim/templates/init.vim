@@ -61,7 +61,6 @@ Plug 'Yggdroot/indentLine'
 Plug 'airblade/vim-gitgutter'
 Plug 'vim-airline/vim-airline'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'dense-analysis/ale'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -70,8 +69,6 @@ Plug 'mbbill/undotree'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'preservim/nerdcommenter'
 Plug 'scrooloose/nerdtree'
-" Plug 'sheerun/vim-polyglot'
-" Plug 'atsman/vim-clojure-static', { 'for': 'clojure' }
 Plug 'jiangmiao/auto-pairs'
 Plug 'Olical/conjure', {'tag': 'v4.3.1'}
 Plug 'tpope/vim-fugitive'
@@ -82,10 +79,6 @@ Plug 'junegunn/goyo.vim'
 Plug 'cocopon/colorswatch.vim'
 Plug 'crusoexia/vim-monokai'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries', 'for': 'go' }
-
-Plug 'neovim/nvim-lspconfig'
-Plug 'tjdevries/lsp_extensions.nvim'
-Plug 'nvim-lua/completion-nvim'
 
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
@@ -99,31 +92,6 @@ call plug#end()
 silent! colorscheme monokai
 silent! color monokai
 
-"---------------------------------------------
-" Language Server Protocol
-"---------------------------------------------
-lua << END
-  local lspconfig = require'lspconfig'
-  local api = vim.api
-
-  vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-    vim.lsp.diagnostic.on_publish_diagnostics, {
-      virtual_text = true,
-      signs = true,
-      update_in_insert = false,
-    }
-  )
-
-  function on_attach(client, bufnr)
-    require'completion'.on_attach(client, bufnr)
-    api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-  end
-
-  lspconfig.tsserver.setup{on_attach=on_attach}
-  lspconfig.clojure_lsp.setup{on_attach=on_attach}
-  lspconfig.rust_analyzer.setup{on_attach=on_attach}
-END
-
 " autocomplete
 let g:completion_enable_auto_popup = 0 " disable automatic autocomplete popup
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
@@ -135,27 +103,8 @@ inoremap <silent><expr> <C-space> completion#trigger_completion()
 
 autocmd CompleteDone * pclose
 
-" diagnostics
-call sign_define("LspDiagnosticsErrorSign", {"text" : "•", "texthl" : "LspDiagnosticsError"})
-call sign_define("LspDiagnosticsWarningSign", {"text" : "•", "texthl" : "LspDiagnosticsWarning"})
-call sign_define("LspDiagnosticsInformationSign", {"text" : "•", "texthl" : "LspDiagnosticsInformation"})
-call sign_define("LspDiagnosticsHintSign", {"text" : "•", "texthl" : "LspDiagnosticsHint"})
-
-nnoremap <silent>gd    <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent><c-]> :call <SID>definition()<CR>
-nnoremap <silent>K :call <SID>show_documentation()<CR>
-
-nnoremap <silent>ga    <cmd>lua vim.lsp.buf.code_action()<CR>
-nnoremap <silent>gD    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent><c-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent>1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent>gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent>g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent>gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-
 nnoremap <silent> g[ <cmd>PrevDiagnosticCycle<cr>
 nnoremap <silent> g] <cmd>NextDiagnosticCycle<cr>
-nnoremap <silent> sd <cmd>lua vim.lsp.util.show_line_diagnostics()<cr>
 
 function! s:definition()
   if (index(['vim','help'], &filetype) >= 0)
@@ -187,46 +136,6 @@ lua <<EOF
     },
   }
 EOF
-
-"---------------------------------------------
-" Ale linter
-"---------------------------------------------
-let g:ale_enabled=1
-let g:ale_linters = {
-\   'typescript': ['eslint', 'tsserver'],
-\   'typescriptreact': ['eslint', 'tsserver'],
-\   'python': ['pyls', 'black', 'mypy'],
-\   'yaml': ['yamllint'],
-\   'clojure': ['clj-kondo']
-\}
-
-let g:ale_fixers = {
-\   '*': ['remove_trailing_lines', 'trim_whitespace'],
-\   'javascript': ['prettier', 'eslint'],
-\   'typescript': ['prettier', 'eslint'],
-\   'typescriptreact': ['prettier', 'eslint'],
-\   'json': ['jq'],
-\}
-
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_save = 1
-let g:ale_lint_delay = 0
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_filetype_changed = 0
-let g:ale_lint_on_insert_leave = 0
-let g:ale_lint_on_text_changed = 0
-let g:ale_linters_explicit = 1
-let g:ale_open_list = 0
-let g:ale_set_highlights = 0
-let g:ale_set_loclist = 1
-let g:ale_set_quickfix = 0
-let g:ale_set_signs = 1
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = '•'
-let g:ale_sign_offset = 1000000
-let g:ale_sign_warning = '•'
-let g:ale_python_auto_pipenv = 1
-let g:ale_completion_tsserver_autoimport = 1
 
 "---------------------------------------------
 " Python provider

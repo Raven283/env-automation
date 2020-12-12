@@ -1,10 +1,6 @@
 ---
 - name: Make sure macos configuration is set
   shell: |
-    # Disable window animations ('new window' scale effect)
-    defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool false
-    defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
-
     # Show icons for hard drives, servers, and removable media on the desktop
     defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
     defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
@@ -24,8 +20,8 @@
     defaults write com.apple.LaunchServices LSQuarantine -bool false
 
     # Require password immediately after sleep or screen saver begins
-    defaults write com.apple.screensaver askForPassword -int 1
-    defaults write com.apple.screensaver askForPasswordDelay -int 0
+    # defaults write com.apple.screensaver askForPassword -int 1
+    # defaults write com.apple.screensaver askForPasswordDelay -int 0
 
     # Save screenshots to the desktop
     defaults write com.apple.screencapture location -string "$HOME/Desktop"

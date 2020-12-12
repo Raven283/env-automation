@@ -1,5 +1,5 @@
 # visudo
-# useradd -m -G wheel -s /bin/bash alehatsman
+# useradd -m -G wheel -s /bin/bash matjah
 # passwd ale
 
 # Arch.exe config --default-user ale
